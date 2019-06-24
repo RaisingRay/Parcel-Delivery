@@ -1,0 +1,47 @@
+﻿@Styles.Render("~/Content/Lux.css")
+@Styles.Render("~/Content/MultyDiv.css")
+@model List<PFE.Entity.Transactions.OrderTransport>
+@{
+    ViewBag.Title = "Deliverys";
+    Layout = "~/Views/Employee/_Menu.cshtml";
+    PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject bo = new PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject();
+    Response.AppendHeader("Refresh", "3");
+}
+
+<div class="container text-center" style="color:black;">
+    <br /><br />
+    <br /><br /><br />
+    <table class="table table-hover" style="color:black">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Package Weight(G)</th>
+                <th scope="col">Pickup Address</th>
+                <th scope="col">Delivery Address</th>
+                <th scope="col">Customer's CIN</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+            <tr>
+                @{
+                    PFE.Entity.Transactions.Package package = (PFE.Entity.Transactions.Package)order.package.Value;
+                    PFE.Entity.Transactions.Location pickup = (PFE.Entity.Transactions.Location)order.pickupLocation.Value;
+                    PFE.Entity.Transactions.Location destination = (PFE.Entity.Transactions.Location)order.destination.Value;
+                    PFE.Entity.HumanRessources.Customer customer = (PFE.Entity.HumanRessources.Customer)order.customer.Value;
+                }
+                <th scope="row">@order.id.Value</th>
+                <td>@bo.FilteringBy(package.id).getPackage()[0].weight.Value</td>
+                <td>@bo.FilteringBy(pickup.id).getLocation()[0].address.Value</td>
+                <td>@bo.FilteringBy(destination.id).getLocation()[0].address.Value</td>
+                <td>@bo.FilteringBy(customer.ctmId).getCustomer()[0].cin.Value</td>
+                <td><a href="/Employee/PickupDetails/@order.id.Value" style="text-decoration:none;" class="button2">Details</a></td>
+            </tr>
+            }
+
+
+        </tbody>
+    </table>
+
+</div>

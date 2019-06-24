@@ -1,0 +1,61 @@
+﻿@Styles.Render("~/Content/Lux.css")
+@Styles.Render("~/Content/MultyDiv.css")
+@model List<PFE.Entity.HumanRessources.Driver>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/RessourcesManager/_Menu.cshtml";
+
+    PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject bo = new PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject();
+    Response.AppendHeader("Refresh", "3");
+}
+
+
+<div class="container text-center" style="color:black;">
+    <br /><br />
+    <h3>Drivers</h3>
+    <br /><br /><br />
+    <table class="table table-hover">
+        <thead style="color:black">
+            <tr>
+                <th scope="col">Driver CIN</th>
+                <th scope="col">Driver Full Name</th>
+                <th scope="col">License Type</th>
+                <th scope="col">Vehicle id</th>
+                <th scope="col">Weight (G)</th>
+                <th scope="col">Payload (KG)</th>
+                <th scope="col">Switch Availability</th>
+                <th scope="col">Assigments Details</th>
+            </tr>
+        </thead>
+        <tbody style="color:black">
+            @foreach (var driver in Model)
+            {
+
+                String tableColor = "table-success";
+                if ((bool)driver.available.Value == false)
+                {
+                    tableColor = "table-danger";
+                }
+            <tr class=@tableColor>
+                @{
+                    PFE.Entity.Transactions.Vehicle vehicle = (PFE.Entity.Transactions.Vehicle)driver.vehicle.Value;
+                    vehicle = bo.FilteringBy(vehicle.id).getVehicle()[0];
+                }
+                <th scope="row">@driver.cin.Value</th>
+                <td>@driver.firstName.Value @driver.lastName.Value</td>
+                <td>@driver.driverType.Value</td>
+                <td>@vehicle.license_plate.Value</td>
+                <td>@bo.getWeightDriversVehicle(driver.dvrId)</td>
+                <td>@vehicle.maxweight.Value</td>
+                <td><a href="/RessourcesManager/SwitchAvailability/@driver.dvrId.Value" class="button2" style="text-decoration:none">Switch</a></td>
+                <td><a href="/RessourcesManager/Details/@driver.dvrId.Value" class="button2" style="text-decoration:none">Details</a></td>
+            </tr>
+
+
+}
+
+
+        </tbody>
+    </table>
+
+</div>

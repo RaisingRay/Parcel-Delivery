@@ -1,0 +1,73 @@
+﻿@Styles.Render("~/Content/Lux.css")
+@Styles.Render("~/Content/MultyDiv.css")
+@model List<PFE.Entity.Transactions.Assignment>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/RessourcesManager/_Menu.cshtml";
+    PFE.Entity.HumanRessources.Driver driver = new PFE.Entity.HumanRessources.Driver();
+    PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject bo = new PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject();
+
+    try
+    {
+        driver = (PFE.Entity.HumanRessources.Driver)Model[0].driver.Value;
+        driver = bo.FilteringBy(driver.dvrId).getDriver()[0];
+    }
+    catch (Exception) { }
+}
+
+<div class="container" style="color:black">
+    <br /><br /><br />
+    <h4>Drivers Informations:</h4>
+    CIN: @driver.cin.Value <br />
+    FullName: @driver.firstName.Value @driver.lastName.Value<br />
+    Vehicle Type: @driver.driverType.Value<br />
+</div>
+<div class="container text-center" style="color:black;">
+    <br /><br />
+    <br /><br /><br />
+    <table class="table table-hover">
+        <thead style="color:black">
+            <tr>
+                <th scope="col">Assignment Id</th>
+                <th scope="col">Created Date Assignment</th>
+                <th scope="col">Assignmnet Type</th>
+                <th scope="col">Full Address</th>
+            </tr>
+        </thead>
+        <tbody style="color:black">
+            @foreach (var assignment in Model)
+            {
+                String address = "Null";
+                PFE.Entity.Transactions.OrderTransport order =(PFE.Entity.Transactions.OrderTransport) assignment.order.Value;
+                PFE.Entity.Transactions.Location Pickup=(PFE.Entity.Transactions.Location) order.pickupLocation.Value;
+                PFE.Entity.Transactions.Location Delivery=(PFE.Entity.Transactions.Location)order.destination.Value;
+
+                try
+                {
+                    Pickup = bo.FilteringBy(Pickup.id).getLocation()[0];
+                    Delivery = bo.FilteringBy(Delivery.id).getLocation()[0];
+                    order = bo.FilteringBy(order.id).getOrderTransport()[0];
+
+                    if (assignment.assignmentType.Value.Equals("pickup"))
+                    {
+                        address = Pickup.state.Value + " " + Pickup.city.Value + "  " + Pickup.address.Value + "  " + Pickup.zipCode.Value;
+                    }
+                    else
+                    {
+                        address = Delivery.state.Value + " " + Delivery.city.Value + "  " + Delivery.address.Value + "  " + Delivery.zipCode.Value;
+                    }
+
+                }
+                catch (Exception) { }
+                <tr>
+                    <th scope="row">@assignment.id.Value</th>
+                    <td>@assignment.assignmentDate.Value</td>
+                    <td>@assignment.assignmentType.Value</td>
+                    <td>Monastir Bennan Hay intilaka 5025 </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+</div>

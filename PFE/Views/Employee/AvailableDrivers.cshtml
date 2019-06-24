@@ -1,0 +1,45 @@
+﻿@Styles.Render("~/Content/Lux.css")
+@Styles.Render("~/Content/MultyDiv.css")
+@model PFE.Entity.Transactions.OrderTransport
+@{
+    ViewBag.Title = "driverAssignment";
+    Layout = "~/Views/Employee/_Menu.cshtml";
+
+    PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject bo = new PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject();
+
+
+    PFE.Entity.HumanRessources.Driver driver = new PFE.Entity.HumanRessources.Driver();
+    driver.available.Value = true;
+
+    List<PFE.Entity.HumanRessources.Driver> availableDrivers = bo.FilteringBy(driver.available).getDriver();
+
+}
+<table class="table table-hover" style="color:black">
+    <thead>
+        <tr>
+            <th scope="col">Driver id</th>
+            <th scope="col">Full name</th>
+            <th scope="col">Vehicle License</th>
+            <th scope="col">Vehicle Max Weight</th>
+            <th scope="col">Assign</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var drv in availableDrivers)
+        {
+            <tr class="table-active">
+                @{
+                    PFE.Entity.Transactions.Vehicle vehicle = (PFE.Entity.Transactions.Vehicle)drv.vehicle.Value;
+                    vehicle = bo.FilteringBy(vehicle.id).getVehicle()[0];
+                }
+                <th scope="row">@drv.dvrId.Value</th>
+                <td>@drv.firstName.Value @drv.lastName.Value</td>
+                <td>@vehicle.license_plate.Key</td>
+                <td>@vehicle.maxweight.Value</td>
+                <td><a href="/Employee/AssignDriverPickup?id1=@Model.id.Value&id2=@drv.dvrId.Value" class="button2" style="text-decoration:none">Assign Driver</a></td>
+            </tr>
+        }
+
+    </tbody>
+</table>

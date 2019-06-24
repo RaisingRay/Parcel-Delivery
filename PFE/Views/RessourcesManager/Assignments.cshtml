@@ -1,0 +1,44 @@
+﻿@Styles.Render("~/Content/Lux.css")
+@Styles.Render("~/Content/MultyDiv.css")
+@model List<PFE.Entity.Transactions.Assignment>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/RessourcesManager/_Menu.cshtml";
+    Response.AppendHeader("Refresh", "3");
+    PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject bo = new PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject();
+}
+
+
+<div class="container text-center" style="color:black;">
+    <br /><br />
+    <h3>UnChecked Assignments</h3>
+    <br /><br /><br />
+    <table class="table table-hover">
+        <thead style="color:black">
+            <tr>
+                <th scope="col">Assignment Id</th>
+                <th scope="col">Driver CIN</th>
+                <th scope="col">Driver Full Name</th>
+                <th scope="col">Success</th>
+            </tr>
+        </thead>
+        <tbody style="color:black">
+            @foreach (var assignment in Model)
+            {
+            <tr>
+                @{
+                    PFE.Entity.HumanRessources.Driver driver = (PFE.Entity.HumanRessources.Driver)assignment.driver.Value;
+                    driver = bo.FilteringBy(driver.dvrId).getDriver()[0];
+                }
+                <th scope="row">@assignment.id.Value</th>
+                <td>@driver.cin.Value</td>
+                <td>@driver.firstName.Value @driver.lastName.Value</td>
+                <td><a href="/RessourcesManager/SuccesfullAssignment/@assignment.id.Value" class="button2" style="text-decoration:none">Successfull</a></td>
+            </tr>
+            }
+
+
+        </tbody>
+    </table>
+
+</div>

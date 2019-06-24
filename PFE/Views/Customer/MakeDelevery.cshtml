@@ -1,0 +1,164 @@
+﻿@model PFE.Entity.HumanRessources.Customer
+@Styles.Render("~/Content/Lux.css")
+@Styles.Render("~/Content/MultyDiv.css")
+
+@{
+    ViewBag.Title = "MakeDelevery";
+    Layout = "~/Views/Customer/_Menu.cshtml";
+}
+
+<body onload="setup()">
+    <br />
+    <div class="container">
+        <h5> Welcome to our service, just file the Delivery ,relax and wait for our Employee to get the package</h5>
+    </div>
+    @using (Html.BeginForm("test", "Customer"))
+    {
+        <div id="div1" class="container col-lg-6">
+            <div class="centered  text-center MultyDiv">
+
+                <h1 class="float-left" style="color:white">Pickup Location</h1><br /><br /><br />
+                <input type="text" name="pstate" id="p" placeholder="State" class="sign" /><br />
+                <input type="text" name="pcity" placeholder="City" class="sign" /><br />
+                <input type="text" name="paddress" placeholder="Address" class="sign" /><br />
+                <input type="text" name="pzipCode" placeholder="Zip Code" class="sign" /><br /><br /><br />
+
+                <button type="button" onclick="div1todiv2()" class="button float-right">Next</button><br /><br />
+            </div>
+        </div>
+        <div id="div2" class="container col-lg-6">
+            <div class="centered text-center MultyDiv">
+                <h1 class="float-left" style="color:white">Delivery Location</h1><br /><br /><br />
+                <input type="text" id="d" name="dstate" placeholder="State" class="sign" /><br />
+                <input type="text" name="dcity" placeholder="City" class="sign" /><br />
+                <input type="text" name="daddress" placeholder="Address" class="sign" /><br />
+                <input type="text" name="dzipCode" placeholder="Zip Code" class="sign" /><br /><br /><br />
+                <button type="button" onclick="div2todiv3()" class="button float-right">Next</button><br /><br />
+            </div>
+        </div>
+        <div id="div3" class="container col-lg-6">
+            <div class="centered  MultyDiv">
+                <h1 style="color:white">Parcel</h1><br /><br /><br />
+                <input type="text" id="weight" onfocusout="calculprice()" name="Weight" placeholder="Weight" class="sign" /><br />
+                <input type="text" name="MatterialType" placeholder="Matterial Type" class="sign" /><br /><br />
+                <h1 style="color:white;">Suppliment Survices</h1><br /><br /><br />
+                <input onclick="calculprice()" value="true" type="checkbox" id="r" name="Recommendation"> Recommendation (2,000 dt) <br />
+                <input onclick="calculprice()" value="true" type="checkbox" id="aor" name="AcknowledgmentOfReceipt"> Acknowledgment of Receipt (2,400 dt)<br />
+                <input onclick="calculprice()" value="true"
+                       type="checkbox" id="rp" name="RemainingPost"> Remaining Post (0,500 dt) <br />
+                <br /><br />
+                price(dt):<input type="text" id="price" name="price" readonly="readonly" value="0.000" class="sign" style="border:none;" /><br />
+                <button type="button" onclick="div3todiv4()"  class="button float-right">Next</button><br /><br />
+            </div>
+        </div>
+        <div id="div4" class="container col-lg-6">
+            <div class="centered  MultyDiv">
+
+                <h1 style="color:white">Card Information</h1><br /><br /><br />
+                <input type="text" name="number" placeholder="Card Number" class="sign" /><br />
+                <input type="password" name="cvv" placeholder="Cvv" class="sign" /><br /><br />
+                <input type="text" name="name" placeholder="Card Name" class="sign" /><br /><br />
+                <button type="submit" class="button float-right">Pay For Delivery</button><br /><br />
+            </div>
+        </div>
+        <div style="display:none">
+
+            <input type="text" name="pllng" value="12" id="plng" />
+            <input type="text" name="pllat" value="12" id="plat" />
+            <input type="text" name="dllng" value="12" id="dlng" />
+            <input type="text" name="dllat" value="12" id="dlat" />
+        </div>
+            }
+
+            <script>
+                function calculprice() {
+                    var weight = parseFloat(document.getElementById("weight").value)
+                    var price = 4.300;
+
+                    var Recommendation = document.getElementById("r");
+                    var AcknowledgmentOfReceipt = document.getElementById("aor");
+                    var RemainingPost = document.getElementById("rp");
+                    if (weight > 2000) {
+                        weight -= 2000;
+                        weight /= 1000;
+                        weight = Math.ceil(weight)
+                        price += 0.3 * weight;
+                    }
+                    if (Recommendation.checked)
+                        price += 2;
+                    if (AcknowledgmentOfReceipt.checked)
+                        price += 2.4;
+                    if (RemainingPost.checked)
+                        price += 0.5;
+                    document.getElementById("price").value = parseFloat(price).toFixed(3)
+
+                }
+
+                function div1todiv2() {
+                   
+                    pickupCord();
+                    var div1 = document.getElementById("div1");
+                    var div2 = document.getElementById("div2");
+                    div1.style.display = "none";
+                    div2.style.display = "block";
+
+                }
+                function div2todiv3() {
+
+                    deliveryCord()
+                    var div2 = document.getElementById("div2");
+                    var div3 = document.getElementById("div3");
+                    div2.style.display = "none";
+                    div3.style.display = "block";
+                }
+                function div3todiv4() {
+
+                    deliveryCord()
+                    var div2 = document.getElementById("div3");
+                    var div3 = document.getElementById("div4");
+                    div2.style.display = "none";
+                    div3.style.display = "block";
+                }
+                function setup() {
+                    document.getElementById("div1").style.display = "block";
+                    document.getElementById("div2").style.display = "none";
+                    document.getElementById("div3").style.display = "none";
+                    document.getElementById("div4").style.display = "none";
+                }
+                function pickupCord() {
+                    var pstate = document.getElementById('p').value;
+                    var plat = document.getElementById('plat');
+                    var plng = document.getElementById('plng');
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ 'address': pstate }, function (results, status) {
+                        if (status == 'OK') {
+                            plat.focus();
+                            plat.value = results[0].geometry.location.lat();
+                            plng.focus();
+                            plng.value = results[0].geometry.location.lng();
+                        }
+                    });
+                }
+
+                function deliveryCord() {
+                    var dstate = document.getElementById('d').value;
+                    var dlat = document.getElementById('dlat');
+                    var dlng = document.getElementById('dlng');
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ 'address': dstate }, function (results, status) {
+                        if (status == 'OK') {
+
+                            dlat.focus();
+                            dlat.value = results[0].geometry.location.lat();
+
+                            dlng.focus();
+                            dlng.value = results[0].geometry.location.lng();
+                        }
+                    });
+
+                }
+            </script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFfVQifQohDeA0__ezDmPAcBnJNNlLzEE&callback=initMap"
+                    async defer></script>
+
+    </body>

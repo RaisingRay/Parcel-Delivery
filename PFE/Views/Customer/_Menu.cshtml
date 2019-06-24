@@ -1,0 +1,45 @@
+﻿
+@Styles.Render("~/Content/Lux.css")
+@Styles.Render("~/Content/DropDown.css")
+<img style="width:100%; height:20%;" src="~/Content/Assets/Header.jpg" />
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Raising</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="true" aria-label="Toggle navigation" style="">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse collapse show" id="navbarColor01" style="">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+                <a class="nav-link" href="/Customer/Index">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Customer/guide">Guide</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Customer/MakeDelevery">Make Delivery</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Customer/DeliveryHistory">My Delivery</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Customer/about">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Customer/contact">contact</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <div class="dropdown">
+                <button class="dropbtn">Account</button>
+                <div class="dropdown-content">
+                    <a href="#">Account Management</a>
+                    <a href="/Customer/logout">Disconnect</a>
+                </div>
+            </div>
+        </form>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+</nav>
+
+
+@RenderBody()

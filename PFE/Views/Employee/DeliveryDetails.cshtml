@@ -1,0 +1,292 @@
+﻿@Styles.Render("~/Content/Lux.css")
+@Styles.Render("~/Content/VerticalBar.css")
+
+@model PFE.Entity.Transactions.OrderTransport
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Employee/_Menu.cshtml";
+    PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject bo = new PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject();
+
+    PFE.Entity.Transactions.Package package = (PFE.Entity.Transactions.Package)Model.package.Value;
+    PFE.Entity.Transactions.Location pickup = (PFE.Entity.Transactions.Location)Model.pickupLocation.Value;
+    PFE.Entity.Transactions.Location destination = (PFE.Entity.Transactions.Location)Model.destination.Value;
+    PFE.Entity.HumanRessources.Customer customer = (PFE.Entity.HumanRessources.Customer)Model.customer.Value;
+    PFE.Entity.Transactions.Invoice invoice = (PFE.Entity.Transactions.Invoice)Model.invoice.Value;
+
+    package = bo.FilteringBy(package.id).getPackage()[0];
+    pickup = bo.FilteringBy(pickup.id).getLocation()[0];
+    destination = bo.FilteringBy(destination.id).getLocation()[0];
+    customer = bo.FilteringBy(customer.ctmId).getCustomer()[0];
+    invoice = bo.FilteringBy(invoice.id).getInvoice()[0];
+
+    PFE.Entity.HumanRessources.Address address = (PFE.Entity.HumanRessources.Address)customer.address.Value;
+    address = bo.FilteringBy(address.id).getAddress()[0];
+}
+
+<div class="d-flex justify-content-between">
+
+
+    <div id="divcustomer" class="container nicediv">
+        <h3>Personal informations</h3>
+        <p> CIN: @customer.cin.Value </p>
+        <p> Full Name: @customer.firstName.Value @customer.lastName.Value </p>
+        <p> Phonenumber: @customer.phonenumber.Value  </p>
+        <p> job: @customer.job.Value  </p>
+        <hr />
+        <h3>Address</h3>
+        <p> State: @address.state.Value  </p>
+        <p> City: @address.city.Value  </p>
+        <p> Address 1: @address.addressLine1.Value  </p>
+        <p> Address 2: @address.addressLine2.Value  </p>
+        <p> ZipCode: @address.zipCode.Value  </p>
+    </div>
+
+    <div id="divpackage" style="display:none" class="container nicediv">
+        <h3>Package Informations</h3>
+        <p> Matterial type: @package.materialType.Value</p>
+        <p> Weight: @package.weight.Value (g)</p>
+    </div>
+
+    <div id="divpickup" style="display:none" class="container nicediv">
+        <h3>Pickup Location</h3>
+        <div style="float:left;">
+
+            <p> State: @pickup.state.Value  </p>
+            <p> City: @pickup.city.Value  </p>
+            <p> Address: @pickup.address.Value  </p>
+            <p> ZipCode: @pickup.zipCode.Value  </p>
+            <p> LAT: @pickup.Latitude.Value  </p>
+            <p> LNG: @pickup.Longitude.Value  </p>
+        </div>
+
+        <div id="pickup" style="float:right;width:400px;height:300px;background-color:yellow;">
+            <p> LAT: @pickup.Latitude.Value  </p>
+            <p> LNG: @pickup.Longitude.Value  </p>
+        </div>
+    </div>
+
+    <div id="divdelivery" style="display:none" class="container nicediv">
+        <h3>Delivery Location</h3>
+
+        <div style="float:left;">
+            <p> State: @destination.state.Value  </p>
+            <p> City: @destination.city.Value  </p>
+            <p> Address: @destination.address.Value  </p>
+            <p> ZipCode: @destination.zipCode.Value  </p>
+        </div>
+
+        <div id="destination" style="float:right;width:400px;height:300px;background-color:blue;">
+            <p> LAT: @destination.Latitude.Value  </p>
+            <p> LNG: @destination.Longitude.Value  </p>
+        </div>
+
+    </div>
+
+    <div id="divinvoice" style="display:none;width:50%; font-size:12px;line-height: 5px;" class="container nicediv">
+        <div id="invoice" class="container">
+            <h3>Tunisian Post Invoice</h3>
+            <br />                    <br />
+            <div style="float:left; background-color:#e8e8e8;width:200px;height:100px;" class="container">
+                <h4>Invoice</h4>
+                @{
+                    DateTime date = (DateTime)Model.createdDate.Value;
+                }
+                <p>Date :@date.ToString("dd/MM/yyyy")</p>
+                <p>Hours :@date.Hour:@date.Minute</p>
+            </div>
+            <div style="float:right;background-color:#e8e8e8;width:200px;height:150px;" class="container">
+                <h4>Customer</h4>
+                <p> First Name: @customer.firstName.Value </p>
+                <p> Last Name: @customer.lastName.Value </p>
+                <p> Phonenumber: @customer.phonenumber.Value  </p>
+                <p> Address 1: @address.city.Value @address.addressLine1.Value  </p>
+                <p> ZipCode: @address.zipCode.Value  </p>
+            </div>
+
+            <div style=" float:right; width:70%;padding-top:10%;" class="container">
+                <p>Package Weight:@package.weight.Value (g)</p>
+                <p>
+                    Delivery Destination:
+                    @destination.state.Value @destination.city.Value @destination.address.Value @address.zipCode.Value
+                </p>
+                <p> Taxs: </p>
+
+                @if ((bool)invoice.AcknowledgmentOfReceipt.Value)
+                {
+                    <p> Acknowledgment Of Receipt </p>
+                }
+                @if ((bool)invoice.RecommandationTax.Value)
+                {
+                    <p> Recommandation Tax </p>
+                }
+                @if ((bool)invoice.RemainingPostTax.Value)
+                {
+                    <p> Remaining Post Tax </p>
+                }
+
+                <p> Total Price:@invoice.price.Value (dt) </p>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="ml-auto">
+        <ul class="bar">
+            <li class="list"><a onclick="activateCustomer()" id="customer" class="active"> Customer</a></li>
+            <li class="list"><a onclick="activatePackage()" id="package"> Package </a></li>
+            <li class="list"><a onclick="activatePickup()" id="pickup"> Pickup Location </a></li>
+            <li class="list"><a onclick="activateDelivery()" id="delivery"> Delivery Location </a></li>
+            <li class="list"><a onclick="activateInvoice()" id="invoice"> Invoice </a></li>
+            <a href="/Employee/availableDriverDelivery/@Model.id.Value" class="button">Assign Driver</a>
+        </ul>
+    </div>
+</div>
+
+<script>
+        var ctmbtn = document.getElementById("customer");
+        var ctmdiv = document.getElementById("divcustomer");
+
+        var pkgbtn = document.getElementById("package");
+        var pkgdiv = document.getElementById("divpackage");
+
+        var pkupbtn = document.getElementById("pickup");
+        var pkupdiv = document.getElementById("divpickup");
+
+        var dlrbtn = document.getElementById("delivery");
+        var dlrdiv = document.getElementById("divdelivery");
+
+        var ivcbtn = document.getElementById("invoice");
+        var ivcdiv = document.getElementById("divinvoice");
+
+        function activateCustomer() {
+
+            ctmbtn.setAttribute("class", "active");
+            ctmdiv.style.display = "block";
+
+
+            pkgbtn.classList.remove("active");
+            pkgdiv.style.display = "none";
+
+            pkupbtn.classList.remove("active");
+            pkupdiv.style.display = "none";
+
+            dlrbtn.classList.remove("active");
+            dlrdiv.style.display = "none";
+
+            ivcbtn.classList.remove("active");
+            ivcdiv.style.display = "none";
+        }
+
+        function activatePackage() {
+            pkgbtn.setAttribute("class", "active");
+            pkgdiv.style.display = "block";
+
+
+            ctmbtn.classList.remove("active");
+            ctmdiv.style.display = "none";
+
+            pkupbtn.classList.remove("active");
+            pkupdiv.style.display = "none";
+
+            dlrbtn.classList.remove("active");
+            dlrdiv.style.display = "none";
+
+            ivcbtn.classList.remove("active");
+            ivcdiv.style.display = "none";
+        }
+
+        function activatePickup() {
+            pkupbtn.setAttribute("class", "active");
+            pkupdiv.style.display = "block";
+
+            ctmbtn.classList.remove("active");
+            ctmdiv.style.display = "none";
+
+            pkgbtn.classList.remove("active");
+            pkgdiv.style.display = "none";
+
+            dlrbtn.classList.remove("active");
+            dlrdiv.style.display = "none";
+
+            ivcbtn.classList.remove("active");
+            ivcdiv.style.display = "none";
+        }
+
+        function activateDelivery() {
+            dlrbtn.setAttribute("class", "active");
+            dlrdiv.style.display = "block";
+
+            ctmbtn.classList.remove("active");
+            ctmdiv.style.display = "none";
+
+            pkgbtn.classList.remove("active");
+            pkgdiv.style.display = "none";
+
+            pkupbtn.classList.remove("active");
+            pkupdiv.style.display = "none";
+
+            ivcbtn.classList.remove("active");
+            ivcdiv.style.display = "none";
+        }
+
+        function activateInvoice() {
+            ivcbtn.setAttribute("class", "active");
+            ivcdiv.style.display = "block";
+
+            ctmbtn.classList.remove("active");
+            ctmdiv.style.display = "none";
+
+            pkgbtn.classList.remove("active");
+            pkgdiv.style.display = "none";
+
+            pkupbtn.classList.remove("active");
+            pkupdiv.style.display = "none";
+
+            dlrbtn.classList.remove("active");
+            dlrdiv.style.display = "none";
+
+        }
+
+
+
+
+        function initMap() {
+
+            var pickupmap;
+            var destinationmap;
+
+            var pickupLatLng = { lat: @pickup.Latitude.Value, lng: @pickup.Longitude.Value };
+            var destinationLatLng = { lat: @destination.Latitude.Value, lng: @destination.Longitude.Value };
+
+
+            destinationmap = new google.maps.Map(document.getElementById('destination'), {
+                center: destinationLatLng,
+                zoom: 13
+
+            });
+
+            pickupmap = new google.maps.Map(document.getElementById('pickup'), {
+                center: pickupLatLng,
+                zoom: 13
+
+            });
+
+            var destinationmarker = new google.maps.Marker({
+                position: destinationLatLng,
+                map: destinationmap,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                title: 'delivery'
+            });
+
+            var pickupmarker = new google.maps.Marker({
+                position: pickupLatLng,
+                map: pickupmap,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+                title: 'Pickup'
+            });
+        }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFfVQifQohDeA0__ezDmPAcBnJNNlLzEE&callback=initMap"
+        async defer></script>

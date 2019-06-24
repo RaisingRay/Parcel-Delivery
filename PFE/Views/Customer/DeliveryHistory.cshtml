@@ -1,0 +1,43 @@
+﻿@Styles.Render("~/Content/Lux.css")
+@model List<PFE.Entity.Transactions.OrderTransport>
+
+@{
+    ViewBag.Title = "DeliveryHistory";
+    Layout = "~/Views/Customer/_Menu.cshtml";
+    PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject bo = new PFE.Tiers.Buisnes_Objects_Layer.BuisnesObject();
+}
+
+<div class="container text-center" style="color:black;">
+    <br /><br />
+    <h3> Your Deliverys</h3>
+<br /><br /><br />
+    <table style="color:black;" class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Package Weight(G)</th>
+                <th scope="col">Pickup Address</th>
+                <th scope="col">Delivery Address</th>
+            </tr>
+        </thead>
+        <tbody style="color:black">
+            @foreach (var order in Model)
+            {
+                <tr>
+                    @{
+                        PFE.Entity.Transactions.Package package =(PFE.Entity.Transactions.Package) order.package.Value;
+                        PFE.Entity.Transactions.Location pickup = (PFE.Entity.Transactions.Location)order.pickupLocation.Value;
+                        PFE.Entity.Transactions.Location destination = (PFE.Entity.Transactions.Location)order.destination.Value;
+                    }
+                    <th scope="row">@order.id.Value</th>
+                    <td>@bo.FilteringBy(package.id).getPackage()[0].weight.Value</td>
+                    <td>@bo.FilteringBy(pickup.id).getLocation()[0].address.Value</td>
+                    <td>@bo.FilteringBy(destination.id).getLocation()[0].address.Value</td>
+                </tr>
+             }
+
+
+        </tbody>
+    </table>
+
+</div>

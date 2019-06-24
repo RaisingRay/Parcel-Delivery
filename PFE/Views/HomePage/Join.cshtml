@@ -1,0 +1,68 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    @Styles.Render("~/Content/StyleJoin.css")
+    <meta name="viewport" content="width=device-width" />
+    <title>JoinPage</title>
+</head>
+<body>
+    <div class="container">
+        <div class="login">
+            Log In 
+            <form class="button-group" action="Authentificated" method="post">
+                <input class=" log" type="email" name="email" placeholder="Email@Exemple.com" required /><br />
+                <input class="log" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" title="6 characters minimum" type="password" name="password" placeholder="Password" required /><br />
+                <label style="background-color:brown; color:white">@TempData["Error"]</label>
+                <br /><br />
+                <input class="button2" type="submit" value="Log In" /><br />
+            </form>
+        </div>
+
+        <div class="signup">
+            Sign Up
+            <label style="background-color:brown; color:white">@TempData["errorSign"]</label>
+            <form class="button-group" action="addCustomer" method="post">
+                <input class="sign" type="email" id="exampleInputEmail1" name="email" placeholder="Email@Exemple.com" required /><br />
+
+                <input class="sign" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" onchange="form.confirmpass.pattern = RegExp.escape(this.value);" title="minmum 6 character with uppercase and numbers" id="inputPassword" name="password" placeholder="Password" required /><br />
+                <input class="sign" type="password" title="Doesn't Match" data-match-error="password doesn't match" id="inputPasswordConfirm" data-match="#inputPassword" name="confirmpass" placeholder="Confirm Password" required /><br />
+                <br /><br />
+                Personal Information:
+                <hr />
+
+                <input class="sign" type="text" name="cin" placeholder="CIN 8 numbers" required /><br />
+                <input class="sign" type="text" name="firstName" placeholder="First Name" required /><br />
+                <input class="sign" type="text" name="lastName" placeholder="Last Name" required /><br />
+                <input class="sign" type="text" name="phonenumber" placeholder="Phonenumber" /><br />
+                <input class="sign" type="text" name="job" placeholder="job" /><br />
+                <br /><br />
+                Address:
+                <hr />
+
+                <input class="sign" type="text" name="state" placeholder="State" required /><br />
+                <input class="sign" type="text" name="city" placeholder="City" required /><br />
+                <input class="sign" type="text" name="addressLine1" placeholder="Address Line 1" required /><br />
+                <input class="sign" type="text" name="addressLine2" placeholder="Address Line 2 (optional)" /><br />
+                <input class="sign" type="text" name="zipcode" placeholder="Zip Code" required /><br />
+                <br />
+                <input class="button" type="submit" value="Sign Up" /><br />
+            </form>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+
+    if (!RegExp.escape) {
+        RegExp.escape = function (s) {
+            return String(s).replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
+        };
+    }
+
+</script>
+</html>
